@@ -26,10 +26,15 @@ jobs:
           api-level: 30 
           target: default
           profile: Pixel 3
-          #emulator-options: -memory 4096 -no-snapshot-save -no-window -gpu swiftshader_indirect
-          #disable-animations: true # END OF EMULATOR STEP
-          script: echo "Emulator setup complete."
-
+          timeout-in-minutes: 10
+          
+          script: |
+            echo "Waiting for emulator to boot..."
+            adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done;'
+            echo "Emulator booted!"
+            
+          emulator-options: -memory 4096 -no-snapshot-save -no-window -gpu swiftshader_indirect
+          disable-animations: true 
       # 3. Start Appium and Run Tests
       - name: Start Appium Server and Run Tests
         run: |
