@@ -30,7 +30,7 @@ jobs:
           disable-animations: true # END OF EMULATOR STEP
 
       # 3. Start Appium and Run Tests
-      - name: 🚀 Start Appium Server and Run Tests
+      - name: Start Appium Server and Run Tests
         run: |
           npm install -g appium
           appium & # Starts Appium Server in the background on port 4723
