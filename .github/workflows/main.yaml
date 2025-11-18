@@ -28,7 +28,8 @@ jobs:
           profile: Pixel 3
           emulator-options: -memory 4096 -no-snapshot-save -no-window -gpu swiftshader_indirect
           disable-animations: true # END OF EMULATOR STEP
-
+          script: echo "Emulator setup complete."
+          
       # 3. Start Appium and Run Tests
       - name: Start Appium Server and Run Tests
         run: |
