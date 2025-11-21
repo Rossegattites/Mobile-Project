@@ -18,7 +18,16 @@ jobs:
           
       - name: Install Dependencies
         run: npm install
-
+      
+      - name: Setup Java Environment (Required for Gradle)
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin' 
+          java-version: '17'
+          cache: 'gradle'
+      - name: Build Android App (Assemble Debug)
+        run: ./gradlew assembleDebug
+        
       # 2. Android Emulator Setup and Start
       - name: Setup Android SDK and Emulator
         uses: reactivecircus/android-emulator-runner@v2
@@ -32,7 +41,7 @@ jobs:
             echo "Waiting for emulator to boot..."
             adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done;'
             echo "Emulator booted!"
-            
+
           emulator-options: -memory 4096 -no-snapshot-save -no-window -gpu swiftshader_indirect
           disable-animations: true 
       # 3. Start Appium and Run Tests
