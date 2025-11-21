@@ -26,12 +26,9 @@ jobs:
           api-level: 30 
           target: default
           profile: Pixel 3
-          timeout-in-minutes: 10
+          emulator-boot-timeout: 300
           
-          script: |
-            echo "Waiting for emulator to boot..."
-            adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done;'
-            echo "Emulator booted!"
+          script: echo "Emulator setup complete."
 
           emulator-options: -memory 4096 -no-snapshot-save -no-window -gpu swiftshader_indirect
           disable-animations: true 
@@ -39,8 +36,10 @@ jobs:
       - name: Start Appium Server and Run Tests
         run: |
           npm install -g appium
-          appium & # Starts Appium Server in the background on port 4723
-          npx wait-on http://127.0.0.1:4723 -t 60000 # Wait for Appium to be available
           
-          npm run build || true # Build command (optional, kept for robustness)
-          npm run test # Executes WebdriverIO tests (wdio.conf.ts)
+          adb wait-for-device # Wait for the emulator to be ready
+          
+          appium & # Starts Appium Server in the background on port 4723
+          npx wait-on http://127.0.0.1:4723 -t 60000 # Wait for Appium
+          npm run build || true
+          npm run test
