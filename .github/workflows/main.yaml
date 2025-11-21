@@ -19,16 +19,6 @@ jobs:
       - name: Install Dependencies
         run: npm install
       
-      - name: Setup Java Environment (Required for Gradle)
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin' 
-          java-version: '17'
-          cache: 'gradle'
-          cache-dependency-path: 'app/android/build.gradle'
-      - name: Build Android App (Assemble Debug)
-        run: ./gradlew assembleDebug
-        working-directory: 'app/android'
       # 2. Android Emulator Setup and Start
       - name: Setup Android SDK and Emulator
         uses: reactivecircus/android-emulator-runner@v2
