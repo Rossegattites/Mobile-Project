@@ -24,11 +24,11 @@ jobs:
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 30 
-          target: default
+          #target: default
+          system-image: system-images;android-30;google_apis;x86
           profile: Pixel 3
           emulator-boot-timeout: 300
-          
-          script: echo "Emulator setup complete."
+          script: adb shell input keyevent 82
 
           emulator-options: -memory 4096 -no-snapshot-save -no-window -gpu swiftshader_indirect
           disable-animations: true 
@@ -37,9 +37,11 @@ jobs:
         run: |
           npm install -g appium
           
-          adb wait-for-device # Wait for the emulator to be ready
+          adb wait-for-device 
           
+          adb shell input keyevent 82
+
           appium & # Starts Appium Server in the background on port 4723
           npx wait-on http://127.0.0.1:4723 -t 60000 # Wait for Appium
-          npm run build || true
+          
           npm run test
