@@ -20,18 +20,24 @@ jobs:
         run: npm install
       
       # 2. Android Emulator Setup and Start
-      - name: Setup Android SDK and Emulator
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: 30 
-          #target: default
-          system-image: system-images;android-30;google_apis;x86
-          profile: Pixel 3
-          emulator-boot-timeout: 300
-          script: adb shell input keyevent 82
+      - name: Manual Android/Emulator Setup
+        run: |
+          # 1. Install Platform Tools, Build Tools, and SDK 30 packages
+          $ANDROID_SDK_ROOT/tools/bin/sdkmanager "platform-tools" "platforms;android-30" "build-tools;30.0.3"
+          $ANDROID_SDK_ROOT/tools/bin/sdkmanager "system-images;android-30;google_apis;x86"
+          
+          # 2. Create the Virtual Device (AVD)
+          echo "no" | $ANDROID_SDK_ROOT/tools/bin/avdmanager create avd -n TestDevice -k "system-images;android-30;google_apis;x86"
+          
+          # 3. Start the Emulator in the background
+          nohup $ANDROID_SDK_ROOT/emulator/emulator -avd TestDevice -no-window -no-audio -gpu swiftshader_indirect &
+          
+          # 4. Wait for ADB to be fully initialized
+          $ANDROID_SDK_ROOT/platform-tools/adb wait-for-device
+          $ANDROID_SDK_ROOT/platform-tools/adb shell input keyevent 82 # Unlock the screen
+          
+          echo "Emulator is ready and unlocked."
 
-          emulator-options: -memory 4096 -no-snapshot-save -no-window -gpu swiftshader_indirect
-          disable-animations: true 
       # 3. Start Appium and Run Tests
       - name: Start Appium Server and Run Tests
         run: |
