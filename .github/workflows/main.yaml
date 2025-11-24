@@ -107,4 +107,4 @@ jobs:
           npx wait-on http://127.0.0.1:4723 -t 60000 
           
           # Run the E2E tests
-          npm run test
+          npm run wdio

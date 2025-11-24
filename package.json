@@ -1,5 +1,6 @@
 {
   "name": "mobile-project",
+  "version": "1.0.0",
   "type": "module",
   "devDependencies": {
     "@types/node": "^24.10.1",
@@ -16,6 +17,8 @@
   },
   "scripts": {
     "wdio": "wdio run ./wdio.conf.ts",
-    "build": "CI=false expo build:android -t apk --no-wait"
+    "build": "CI=false expo build:android -t apk --no-wait",
+    "test": "jest",
+    "start": "node server.js"
   }
 }
