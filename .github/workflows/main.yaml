@@ -6,8 +6,7 @@ jobs:
   continuous-integration:
     runs-on: ubuntu-latest
     
-    # Define a custom environment variable for a common SDK root location
-    
+    # Define a custom environment variable for the Android SDK root location
     env:
       ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
 
@@ -26,71 +25,69 @@ jobs:
         # Install project dependencies
         run: npm install
         
-      # 2. Android Emulator Setup and Start
+      # 2. Manual Android/Emulator Setup
       - name: Manual Android/Emulator Setup
-        # Use a single, comprehensive step for Android setup, addressing the AVD path issue
         run: |
-          # The Android SDK manager and tools are often not on the default PATH.
-          # Add the necessary directories to the PATH for convenience.
+          # Add the necessary SDK directories to the PATH
           export PATH="$PATH:$ANDROID_SDK_ROOT/platform-tools:$ANDROID_SDK_ROOT/cmdline-tools/latest/bin"
           
           # --- AVD Path Correction (Fixes ERROR | Unknown AVD name) ---
-          # 1. Define the correct path for AVD configuration files.
-          #    This is CRITICAL: avdmanager uses this env variable to know where to save the AVD.
+          # 1. Define ANDROID_AVD_HOME explicitly for avdmanager to save the AVD configuration here.
           export ANDROID_AVD_HOME=$HOME/.android/avd
           echo "ANDROID_AVD_HOME set to: $ANDROID_AVD_HOME"
           
-          # 2. Ensure the directory exists (mkdir -p avoids errors if it already exists).
+          # 2. Ensure the AVD configuration directory exists.
           mkdir -p "$ANDROID_AVD_HOME"
           echo "Directory created/verified at: $ANDROID_AVD_HOME"
           
           # --- SDK Installation ---
-          # 3. Install necessary packages. Using --channel=0 for stable versions.
-          #    Accept licenses with 'yes' piped into sdkmanager.
+          # 3. Accept all licenses automatically.
           yes | sdkmanager --licenses
           
-          # Install SDK 34 for a modern API level (recommended)
-          # Note: Changed from API 30 to 34 (latest stable at the time of writing)
+          # Install modern SDK packages for better performance and compatibility.
           sdkmanager "platform-tools" "platforms;android-34" "build-tools;34.0.0"
           
-          # Install the necessary System Image (using Google APIs x86_64 for better performance)
+          # Install the system image (x86_64 for fast emulation with KVM)
           sdkmanager "system-images;android-34;google_apis;x86_64"
 
-          # --- AVD Creation ---
-          # 4. Create the AVD. The avdmanager will now use ANDROID_AVD_HOME.
-          #    Using '--force' to ensure it's created cleanly.
+          # 4. Create the Android Virtual Device (AVD).
+          #    avdmanager will use the ANDROID_AVD_HOME path set above.
           avdmanager create avd \
             --name "TestDevice" \
             --package "system-images;android-34;google_apis;x86_64" \
             --device "pixel_3a" \
             --force
-          
-          # 5. List AVDs to confirm creation location
-          avdmanager list avd
 
-      # 3. Start Emulator (Separated step for clarity and better time management)
+      # 3. Start Emulator (Dedicated step for the KVM fix and stability)
       - name: Start Android Emulator
         run: |
+          # --- KVM Permission Fix (Fixes KVM: Permission denied) ---
+          # 1. Create a udev rule to grant full access (MODE="0666") to the /dev/kvm device.
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+          echo "KVM permissions granted."
+          
+          # Re-export crucial environment variables for this step's context
           export PATH="$PATH:$ANDROID_SDK_ROOT/platform-tools:$ANDROID_SDK_ROOT/cmdline-tools/latest/bin"
           export ANDROID_AVD_HOME=$HOME/.android/avd
           
-          # Start the Emulator in the background. Using '-no-cache' for a clean start.
-          # The 'timeout' command is used to kill the emulator if the 'wait-for-device' fails
-          # after a set time (e.g., 5 minutes or 300 seconds), preventing the job from hanging for 15 minutes.
+          # 2. Start the Emulator in the background using nohup and hardware acceleration (-gpu swiftshader_indirect).
           echo "Starting emulator..."
           nohup ${ANDROID_SDK_ROOT}/emulator/emulator -avd TestDevice -no-window -no-audio -gpu swiftshader_indirect -no-cache &
           
-          # Wait for ADB to be fully initialized (up to 300 seconds)
+          # 3. Wait for ADB to be fully initialized (up to 300 seconds)
           echo "Waiting for device to be online..."
           timeout 300 adb wait-for-device
           
-          # Check if the device is connected after the timeout
+          # 4. Check status and handle timeout failure
           if [ $? -ne 0 ]; then
             echo "::error::Emulator failed to start within 300 seconds."
+            killall emulator || true 
             exit 1
           fi
           
-          # Unlock the screen
+          # 5. Unlock the screen
           echo "Unlocking device..."
           adb shell input keyevent 82 
           
@@ -99,13 +96,13 @@ jobs:
       # 4. Start Appium and Run Tests
       - name: Start Appium Server and Run Tests
         run: |
-          # Ensure Appium is installed globally or locally, depending on your project setup
+          # Install Appium
           npm install -g appium
           
           # Start Appium Server in the background
           appium & 
           
-          # Wait for Appium to be fully initialized (up to 60 seconds)
+          # Wait for Appium to be ready
           npx wait-on http://127.0.0.1:4723 -t 60000 
           
           # Run the E2E tests
