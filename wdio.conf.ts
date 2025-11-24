@@ -59,7 +59,8 @@ export const config: WebdriverIO.Config = {
         // capabilities for local Appium web tests on an Android Emulator
         platformName: 'Android',
         //browserName: 'Chrome',
-        'appium:deviceName': 'Pixel 3',
+        'appium:deviceName': 'TestDevice',
+        //'appium:deviceName': 'Pixel 3',
         'appium:platformVersion': '11',
         'appium:automationName': 'UiAutomator2',
         'appium:app': androidAppPath
