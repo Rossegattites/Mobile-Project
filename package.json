@@ -10,6 +10,7 @@
     "appium-uiautomator2-driver": "^6.1.1"
   },
   "scripts": {
-    "wdio": "wdio run ./wdio.conf.ts"
+    "wdio": "wdio run ./wdio.conf.ts",
+    "build": "CI=false"
   }
 }
