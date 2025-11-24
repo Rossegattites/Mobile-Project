@@ -31,7 +31,7 @@ jobs:
           # Add the necessary SDK directories to the PATH
           export PATH="$PATH:$ANDROID_SDK_ROOT/platform-tools:$ANDROID_SDK_ROOT/cmdline-tools/latest/bin"
           
-          # --- AVD Path Correction (Fixes ERROR | Unknown AVD name) ---
+          # --- AVD Path Correction ---
           # 1. Define ANDROID_AVD_HOME explicitly for avdmanager to save the AVD configuration here.
           export ANDROID_AVD_HOME=$HOME/.android/avd
           echo "ANDROID_AVD_HOME set to: $ANDROID_AVD_HOME"
@@ -41,38 +41,39 @@ jobs:
           echo "Directory created/verified at: $ANDROID_AVD_HOME"
           
           # --- SDK Installation ---
-          # 3. Accept all licenses automatically.
           yes | sdkmanager --licenses
-          
-          # Install modern SDK packages for better performance and compatibility.
           sdkmanager "platform-tools" "platforms;android-34" "build-tools;34.0.0"
-          
-          # Install the system image (x86_64 for fast emulation with KVM)
           sdkmanager "system-images;android-34;google_apis;x86_64"
 
-          # 4. Create the Android Virtual Device (AVD).
-          #    avdmanager will use the ANDROID_AVD_HOME path set above.
+          # 3. Create the Android Virtual Device (AVD).
           avdmanager create avd \
             --name "TestDevice" \
             --package "system-images;android-34;google_apis;x86_64" \
             --device "pixel_3a" \
             --force
 
-      # 3. Start Emulator (Dedicated step for the KVM fix and stability)
+          # --- CRITICAL FIX FOR TIMEOUT (EXIT CODE 124) ---
+          # 4. Inject RAM and VM Heap settings into the AVD configuration file (.ini).
+          #    This forces the emulator to use more memory, reducing the boot time.
+          #    Using 2GB (2048M) is a reliable size for CI runners.
+          echo "hw.ramSize=2048M" >> $ANDROID_AVD_HOME/TestDevice.ini
+          echo "vm.heapSize=256M" >> $ANDROID_AVD_HOME/TestDevice.ini
+          echo "Configured AVD RAM settings."
+
+      # 3. Start Emulator (Dedicated step for KVM fix and stability)
       - name: Start Android Emulator
         run: |
-          # --- KVM Permission Fix (Fixes KVM: Permission denied) ---
-          # 1. Create a udev rule to grant full access (MODE="0666") to the /dev/kvm device.
+          # --- KVM Permission Fix (Necessary for fast boot) ---
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
           echo "KVM permissions granted."
           
-          # Re-export crucial environment variables for this step's context
+          # Re-export crucial environment variables
           export PATH="$PATH:$ANDROID_SDK_ROOT/platform-tools:$ANDROID_SDK_ROOT/cmdline-tools/latest/bin"
           export ANDROID_AVD_HOME=$HOME/.android/avd
           
-          # 2. Start the Emulator in the background using nohup and hardware acceleration (-gpu swiftshader_indirect).
+          # 2. Start the Emulator in the background.
           echo "Starting emulator..."
           nohup ${ANDROID_SDK_ROOT}/emulator/emulator -avd TestDevice -no-window -no-audio -gpu swiftshader_indirect -no-cache &
           
@@ -82,7 +83,7 @@ jobs:
           
           # 4. Check status and handle timeout failure
           if [ $? -ne 0 ]; then
-            echo "::error::Emulator failed to start within 300 seconds."
+            echo "::error::Emulator failed to start within 300 seconds. Check KVM and RAM settings."
             killall emulator || true 
             exit 1
           fi
