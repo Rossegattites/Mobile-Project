@@ -43,7 +43,7 @@ jobs:
           
         # working-directory MUST be at the step level
         working-directory: v1/exemplos # Maintained your path: 'v1/exemplos'
-
+        
       # 6. (opcional) Upload de relatórios, vídeos ou logs
       - name: Upload test reports
         uses: actions/upload-artifact@v4
