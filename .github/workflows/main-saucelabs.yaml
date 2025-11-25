@@ -38,8 +38,8 @@ jobs:
         if: steps.check-deps.outputs.skip != 'true'
         run: |
             curl -v \
-                -F "payload=@./apps/android.wdio.native.app.v1.0.8.apk" \
-                -F name=wdio-demo-app-android.apk \
+                -F "payload=@./app/android/Api.Demos-debug.apk" \
+                -F name=Api.Demos-debug.apk \
                 -u "oauth-rossegattites15-15db7:e14e9f20-b9fc-47b8-9f2c-d100d1aeb73f" \
                 'https://api.eu-central-1.saucelabs.com/v1/storage/upload'
 
