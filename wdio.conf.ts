@@ -60,7 +60,6 @@ export const config: WebdriverIO.Config = {
         platformName: 'Android',
         //browserName: 'Chrome',
         'appium:deviceName': 'TestDevice',
-        //'appium:deviceName': 'Pixel 3',
         'appium:platformVersion': '11',
         'appium:automationName': 'UiAutomator2',
         'appium:app': androidAppPath
