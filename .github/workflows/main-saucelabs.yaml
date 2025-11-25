@@ -38,6 +38,7 @@ jobs:
         uses: saucelabs/saucectl-run-action@v4
         with:
         working-directory: v1/exemplos
+        config-file: .sauce/config.yml
         
 
       # (Opcional) Upload de relatórios, vídeos ou logs
