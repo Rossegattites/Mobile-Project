@@ -1,0 +1,26 @@
+# Configuração para rodar APK Android no Sauce Labs
+apiVersion: v1alpha
+kind: test-runner
+
+metadata:
+  name: AndroidNativeAppTest
+
+sauce:
+  region: eu-central-1                # Alterar para 'us-west-1' se preferir US
+  username: $SAUCE_USERNAME          # Pegará do GitHub Secret
+  accessKey: $SAUCE_ACCESS_KEY       # Pegará do GitHub Secret
+
+rootDir: .                            # Diretório raiz do projeto
+artifacts:
+  download: true                      # Baixa vídeos, logs e screenshots
+  outputDir: ./reports
+
+run:
+  type: appium                         # Appium para mobile nativo
+  platformName: Android
+  automationName: UiAutomator2
+  deviceName: "Google Pixel .*"        # Regex para dispositivos disponíveis no Sauce Labs
+  platformVersion: "12"                # Versão do Android
+  app: "storage:filename=Api.Demos-debug.apk"  # APK já enviado para Sauce Storage
+  name: "WDIO Android Native App Test" # Nome do teste
+  build: "Build-${GITHUB_RUN_NUMBER}"   # Build para agrupar execuções

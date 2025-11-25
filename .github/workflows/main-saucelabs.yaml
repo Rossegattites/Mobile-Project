@@ -37,7 +37,8 @@ jobs:
       - name: Run saucectl
         uses: saucelabs/saucectl-run-action@v4
         with:
-        working-directory: ./
+        working-directory: v1/exemplos
+        
 
       # (Opcional) Upload de relatórios, vídeos ou logs
       - name: Upload test reports
