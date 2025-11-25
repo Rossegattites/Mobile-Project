@@ -38,8 +38,7 @@ jobs:
       - name: Run tests with saucectl
         # Updated to v4 for better compatibility and stability
         uses: saucelabs/saucectl-run-action@v4
-        with:
-          pass-threshold: 1 # Optional: defines the minimum passing percentage
+        
           
         # working-directory MUST be at the step level
         working-directory: v1/exemplos # Maintained your path: 'v1/exemplos'
