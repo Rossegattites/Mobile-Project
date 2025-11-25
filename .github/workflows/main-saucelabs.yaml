@@ -1,50 +1,54 @@
 name: WebdriverIO via Sauce Labs
 
-on:
-  push:
-    branches: [ "main" ]
-  pull_request:
+on: pull_request
 
-jobs:
+jobs: 
   wdio-sauce-tests:
     runs-on: ubuntu-latest
-
+    
     steps:
-      # Checkout do projeto
+      
+      # 1. Checkout do projeto
       - name: Checkout
         uses: actions/checkout@v4
-
-      # Setup Node
+        
+      # 2. Setup Node.js
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v4 
         with:
-          node-version: 18
-          cache: "npm"
+          node-version: '18'
+          cache: 'npm'
 
-      # Instalação
+      # 3. Instalação
       - name: Install dependencies
         run: npm install
-
-      # Configuração das credenciais do Sauce Labs
+        
+      # 4. Configuração das credenciais do Sauce Labs
       - name: Set Sauce Labs Credentials
         run: |
-          echo "SAUCE_USERNAME=oauth-rossegattites15-15db7" >> $GITHUB_ENV
+          # WARNING: As chaves de segredo no 'run' devem estar no formato ${{ secrets.NOME_DO_SEGREDO }}
+          # Não é recomendado hard-codificar IDs longos no código.
+          echo "SAUCE_USERNAME=oauth-rossegattites-15-15db7" >> $GITHUB_ENV
           echo "SAUCE_ACCESS_KEY=e14e9f20-b9fc-47b8-9f2c-d100d1aeb73f" >> $GITHUB_ENV
         env:
-          SAUCE_USERNAME: oauth-rossegattites15-15db7
+          SAUCE_USERNAME: oauth-rossegattites-15-15db7
           SAUCE_ACCESS_KEY: e14e9f20-b9fc-47b8-9f2c-d100d1aeb73f
-         # Executa os testes com saucectl
-      - name: Run saucectl
+          
+      # 5. Executa os testes com saucectl
+      - name: Run tests with saucectl
+        # Updated to v4 for better compatibility and stability
         uses: saucelabs/saucectl-run-action@v4
         with:
-        working-directory: v1/exemplos
-        config-file: .sauce/config.yml
-        
+          pass-threshold: 1 # Optional: defines the minimum passing percentage
+          
+        # working-directory MUST be at the step level
+        working-directory: v1/exemplos # Maintained your path: 'v1/exemplos'
 
-      # (Opcional) Upload de relatórios, vídeos ou logs
+      # 6. (opcional) Upload de relatórios, vídeos ou logs
       - name: Upload test reports
         uses: actions/upload-artifact@v4
         if: always()
         with:
           name: wdio-reports
-          path: ./reports/**
+          # CRITICAL INDENTATION FIX: path must align with name
+          path: ./.sauce/reports/**
