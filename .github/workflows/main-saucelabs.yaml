@@ -38,8 +38,8 @@ jobs:
         run: |
           npm install -g saucectl
           saucectl storage upload ./app/Api.Demos-debug.apk \
-            --username $SAUCE_USERNAME \
-            --access-key $SAUCE_ACCESS_KEY
+            --username oauth-rossegattites15-15db7 \
+            --access-key e14e9f20-b9fc-47b8-9f2c-d100d1aeb73f
         env:
           SAUCE_USERNAME: oauth-rossegattites15-15db7
           SAUCE_ACCESS_KEY: e14e9f20-b9fc-47b8-9f2c-d100d1aeb73f
