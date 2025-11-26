@@ -31,7 +31,7 @@ jobs:
       - name: Run tests with saucectl
         uses: saucelabs/saucectl-run-action@v4
         with:
-          pass-threshold: 1
+          
         working-directory: ./
 
       - name: Upload test reports
