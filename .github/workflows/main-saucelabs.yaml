@@ -32,7 +32,7 @@ jobs:
         uses: saucelabs/saucectl-run-action@v4
         with:
           pass-threshold: 1
-        working-directory: v1/exemplos
+        working-directory: ./
 
       - name: Upload test reports
         uses: actions/upload-artifact@v4
