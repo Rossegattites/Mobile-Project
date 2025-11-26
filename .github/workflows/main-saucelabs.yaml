@@ -31,7 +31,11 @@ jobs:
       - name: Run tests with saucectl
         uses: saucelabs/saucectl-run-action@v4
         with:
-        working-directory: ./
+          pass-threshold: 1
+          # CORREÇÃO DEFINITIVA: Usar config-file (baseado na sua estrutura)
+          # Isso elimina o parâmetro problemático 'working-directory'
+          config-file: v1/exemplos/.sauce/config.yml
+        # Linha 'working-directory' removida. A execução ocorre na raiz, lendo o config-file.
 
       - name: Upload test reports
         uses: actions/upload-artifact@v4
