@@ -6,6 +6,10 @@ jobs:
   wdio-sauce-tests:
     runs-on: ubuntu-latest
     
+    # CRÍTICO: Este bloco permite que o GITHUB_TOKEN leia o repositório e evita o erro de Rate Limit
+    permissions:
+      contents: read
+      
     steps:
       
       - name: Checkout do projeto
@@ -28,15 +32,17 @@ jobs:
           SAUCE_USERNAME: oauth-rossegattites-15-15db7
           SAUCE_ACCESS_KEY: e14e9f20-b9fc-47b8-9f2c-d100d1aeb73f
           
+      # CRÍTICO: Copia o config.yml para a raiz do runner, resolvendo o problema de path
+      - name: Prepare config.yml
+        run: cp v1/exemplos/.sauce/config.yml ./
+
       - name: Run tests with saucectl
         uses: saucelabs/saucectl-run-action@v4
         with:
           pass-threshold: 1
-          # CORREÇÃO DEFINITIVA: Usar config-file (baseado na sua estrutura)
-          # Isso elimina o parâmetro problemático 'working-directory'
-          config-file: v1/exemplos/.sauce/config.yml
+          config-file: config.yml # Busca o arquivo copiado na raiz
         env:
-          # O token é criado automaticamente pelo GitHub
+          # O GITHUB_TOKEN é gerado automaticamente, só precisamos passá-lo aqui
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload test reports
