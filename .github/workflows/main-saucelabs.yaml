@@ -6,6 +6,7 @@ jobs:
   wdio-sauce-tests:
     runs-on: ubuntu-latest
     
+    # CRÍTICO: Este bloco permite que o GITHUB_TOKEN leia o repositório e evita o erro de Rate Limit
     permissions:
       contents: read
       
@@ -31,14 +32,14 @@ jobs:
           SAUCE_USERNAME: oauth-rossegattites-15-15db7
           SAUCE_ACCESS_KEY: e14e9f20-b9fc-47b8-9f2c-d100d1aeb73f
           
-      # PASSO CRÍTICO: Debug e cópia forçada do config.yml para a raiz
+      # PASSO CRÍTICO FINAL: DEBUG e CÓPIA FORÇADA
       - name: Prepare config.yml
         run: |
           CONFIG_PATH="v1/exemplos/.sauce/config.yml"
           
-          # 1. Verifica se o arquivo existe na origem
+          # 1. Verifica se o arquivo existe na origem (CRÍTICO)
           if [ ! -f "$CONFIG_PATH" ]; then
-            echo "::error::O arquivo de configuração não foi encontrado no caminho esperado: $CONFIG_PATH"
+            echo "::error::ERRO FATAL: O arquivo de configuração não foi encontrado no caminho esperado: $CONFIG_PATH"
             exit 1
           fi
           
@@ -49,13 +50,13 @@ jobs:
           echo "Conteúdo FINAL do config.yml na raiz do Runner:"
           cat ./config.yml
           
-          ls -l config.yml
+          ls -l config.yml # Verifica a existência
           
       - name: Run tests with saucectl
         uses: saucelabs/saucectl-run-action@v4
         with:
           pass-threshold: 1
-          config-file: config.yml
+          config-file: config.yml # Busca o arquivo na raiz
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -64,4 +65,4 @@ jobs:
         if: always()
         with:
           name: wdio-reports
-          path: ./.sauce/reports/**/*
+          path: ./.sauce/reports/**
