@@ -30,7 +30,6 @@ export const config: WebdriverIO.Config = {
             'appium:orientation': 'PORTRAIT',
             // The path to the app
             'appium:app': 'storage:filename=Api.Demos-debug.apk',
-            'appium:appWaitActivity': 'com.wdiodemoapp.MainActivity',
             'appium:newCommandTimeout': 240,
             // Sauce Labs specific options
             'sauce:options':{
