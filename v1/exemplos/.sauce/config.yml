@@ -28,7 +28,9 @@ suites:
     build: "Build-${GITHUB_RUN_NUMBER}"
     
     files: 
-      - ./test/specs/**/*.ts
+      - ./test/**/*.ts
+      # - ./test/specs/**/*.ts
+      - ./test/**/*.js
 
 #run:
   #type: appium                         # Appium para mobile nativo
