@@ -35,7 +35,9 @@ jobs:
           # CORREÇÃO DEFINITIVA: Usar config-file (baseado na sua estrutura)
           # Isso elimina o parâmetro problemático 'working-directory'
           config-file: v1/exemplos/.sauce/config.yml
-        # Linha 'working-directory' removida. A execução ocorre na raiz, lendo o config-file.
+        env:
+          # O token é criado automaticamente pelo GitHub
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload test reports
         uses: actions/upload-artifact@v4
