@@ -36,6 +36,7 @@ jobs:
       - name: Prepare config.yml
         run: cp v1/exemplos/.sauce/config.yml ./
 
+
       - name: Run tests with saucectl
         uses: saucelabs/saucectl-run-action@v4
         with:
