@@ -6,7 +6,6 @@ jobs:
   wdio-sauce-tests:
     runs-on: ubuntu-latest
     
-    # CRÍTICO: Este bloco permite que o GITHUB_TOKEN leia o repositório e evita o erro de Rate Limit
     permissions:
       contents: read
       
@@ -32,31 +31,31 @@ jobs:
           SAUCE_USERNAME: oauth-rossegattites-15-15db7
           SAUCE_ACCESS_KEY: e14e9f20-b9fc-47b8-9f2c-d100d1aeb73f
           
-      # PASSO CRÍTICO FINAL: DEBUG e CÓPIA FORÇADA
+      # PASSO CRÍTICO FINAL: Debug Rigoroso e Cópia Forçada
       - name: Prepare config.yml
         run: |
           CONFIG_PATH="v1/exemplos/.sauce/config.yml"
           
-          # 1. Verifica se o arquivo existe na origem (CRÍTICO)
+          # 1. Verifica se o arquivo existe na origem (AQUI OCORRE O ERRO SE O PATH ESTIVER ERRADO)
           if [ ! -f "$CONFIG_PATH" ]; then
-            echo "::error::ERRO FATAL: O arquivo de configuração não foi encontrado no caminho esperado: $CONFIG_PATH"
+            echo "::error::ERRO FATAL: O arquivo config.yml NÃO FOI ENCONTRADO NO CAMINHO $CONFIG_PATH. Verifique a estrutura de pastas!"
             exit 1
           fi
           
-          # 2. Move o arquivo para a raiz (mv é mais robusto que cp)
+          # 2. Move o arquivo para a raiz do runner (resolve o problema de leitura do Saucectl)
           mv "$CONFIG_PATH" ./config.yml
           
-          # 3. DEBUG: Exibe o conteúdo do arquivo na raiz
+          # 3. DEBUG: Exibe o conteúdo do arquivo
           echo "Conteúdo FINAL do config.yml na raiz do Runner:"
           cat ./config.yml
           
-          ls -l config.yml # Verifica a existência
+          ls -l config.yml # Confirma que o arquivo está lá
           
       - name: Run tests with saucectl
         uses: saucelabs/saucectl-run-action@v4
         with:
           pass-threshold: 1
-          config-file: config.yml # Busca o arquivo na raiz
+          config-file: config.yml
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
