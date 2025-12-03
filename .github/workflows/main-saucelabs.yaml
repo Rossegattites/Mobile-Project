@@ -34,8 +34,8 @@ jobs:
       # PASSO CRÍTICO FINAL: Debug e Cópia Forçada
       - name: Prepare config.yml
         run: |
-          # O caminho do config.yml deve ser ajustado para a sua estrutura local.
-          CONFIG_PATH="./v1/exemplos/.sauce/config.yml"
+          # CORREÇÃO: Adiciona o './' para garantir que o path seja lido a partir da raiz do runner
+          CONFIG_PATH="./v1/exemplos/.sauce/config.yml" 
           
           # 1. Tenta mover o arquivo. Se falhar, exibe o ERRO FATAL no log.
           if ! mv "$CONFIG_PATH" ./config.yml ; then
@@ -61,5 +61,3 @@ jobs:
         with:
           name: wdio-reports
           path: ./.sauce/reports/**
-
-
