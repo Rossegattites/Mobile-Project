@@ -31,11 +31,11 @@ jobs:
           SAUCE_USERNAME: oauth-rossegattites-15-15db7
           SAUCE_ACCESS_KEY: e14e9f20-b9fc-47b8-9f2c-d100d1aeb73f
           
-      # PASSO CRÍTICO FINAL: Debug e Cópia Forçada com CAMINHO AJUSTADO
+      # PASSO CRÍTICO FINAL: Debug e Cópia Forçada
       - name: Prepare config.yml
         run: |
-          # CORREÇÃO: Tenta o caminho mais curto, assumindo que o runner está dentro de 'v1/'
-          CONFIG_PATH="./exemplos/.sauce/config.yml" 
+          # O caminho de origem FINAL corrigido (inclui o './' para o runner)
+          CONFIG_PATH="./v1/exemplos/.sauce/config.yml" 
           
           # 1. Tenta mover o arquivo. Se falhar, exibe o ERRO FATAL no log.
           if ! mv "$CONFIG_PATH" ./config.yml ; then
