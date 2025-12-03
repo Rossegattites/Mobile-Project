@@ -34,9 +34,6 @@ jobs:
       # PASSO CRÍTICO FINAL: Debug e Cópia Forçada com NOVO CAMINHO
       - name: Prepare config.yml
         run: |
-          # CORREÇÃO FINAL: Removendo o "v1/" para ajustar o caminho.
-          CONFIG_PATH="- name: Prepare config.yml
-        run: |
           CONFIG_PATH="v1/exemplos/.sauce/config.yml"  <--- ESTA LINHA CONTÉM O CAMINHO A SER AJUSTADO
           # ..." 
           
