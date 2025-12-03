@@ -29,15 +29,4 @@ suites:
     
     files: 
       - ./test/**/*.ts
-      # - ./test/specs/**/*.ts
       - ./test/**/*.js
-
-#run:
-  #type: appium                         # Appium para mobile nativo
-  #platformName: Android
-  #automationName: UiAutomator2
-  #deviceName: "Google Pixel .*"        # Regex para dispositivos disponíveis no Sauce Labs
-  #platformVersion: "12"                # Versão do Android
-  #app: "storage:filename=Api.Demos-debug.apk"  # APK já enviado para Sauce Storage
-  #name: "WDIO Android Native App Test" # Nome do teste
-  #build: "Build-${GITHUB_RUN_NUMBER}"   # Build para agrupar execuções

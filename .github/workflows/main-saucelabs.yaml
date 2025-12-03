@@ -35,7 +35,10 @@ jobs:
       - name: Prepare config.yml
         run: |
           # CORREÇÃO FINAL: Removendo o "v1/" para ajustar o caminho.
-          CONFIG_PATH="exemplos/.sauce/config.yml" 
+          CONFIG_PATH="- name: Prepare config.yml
+        run: |
+          CONFIG_PATH="v1/exemplos/.sauce/config.yml"  <--- ESTA LINHA CONTÉM O CAMINHO A SER AJUSTADO
+          # ..." 
           
           # 1. Tenta mover o arquivo. Se falhar, exibe o ERRO FATAL no log.
           if ! mv "$CONFIG_PATH" ./config.yml ; then
