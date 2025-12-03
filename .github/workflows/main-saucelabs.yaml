@@ -31,11 +31,11 @@ jobs:
           SAUCE_USERNAME: oauth-rossegattites-15-15db7
           SAUCE_ACCESS_KEY: e14e9f20-b9fc-47b8-9f2c-d100d1aeb73f
           
-      # PASSO CRÍTICO FINAL: Debug e Cópia Forçada com NOVO CAMINHO
+      # PASSO CRÍTICO FINAL: Debug e Cópia Forçada
       - name: Prepare config.yml
         run: |
-          CONFIG_PATH="v1/exemplos/.sauce/config.yml"  <--- ESTA LINHA CONTÉM O CAMINHO A SER AJUSTADO
-          # ..." 
+          # O caminho do config.yml deve ser ajustado para a sua estrutura local.
+          CONFIG_PATH="./v1/exemplos/.sauce/config.yml"
           
           # 1. Tenta mover o arquivo. Se falhar, exibe o ERRO FATAL no log.
           if ! mv "$CONFIG_PATH" ./config.yml ; then
@@ -61,3 +61,5 @@ jobs:
         with:
           name: wdio-reports
           path: ./.sauce/reports/**
+
+
