@@ -35,7 +35,7 @@ jobs:
       - name: Prepare config.yml
         run: |
           # CORREÇÃO: Tenta o caminho com o ponto inicial.
-          CONFIG_PATH="./v1/exemplos/.sauce/config.yml" 
+          CONFIG_PATH="./.sauce/config.yml" 
           
           # 1. Tenta mover o arquivo. Se falhar, exibe o ERRO FATAL no log.
           if ! mv "$CONFIG_PATH" ./config.yml ; then
@@ -51,7 +51,7 @@ jobs:
         uses: saucelabs/saucectl-run-action@v4
         with:
           pass-threshold: 1
-          config-file: config.yml
+          config-file: .sauce/config.yml
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
