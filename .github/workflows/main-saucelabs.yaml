@@ -34,8 +34,8 @@ jobs:
       # PASSO CRÍTICO FINAL: Debug e Cópia Forçada
       - name: Prepare config.yml
         run: |
-          # O caminho final corrigido
-          CONFIG_PATH=./v1/exemplos/.sauce/config.yml
+          # CORREÇÃO: Tenta o caminho com o ponto inicial.
+          CONFIG_PATH="./v1/exemplos/.sauce/config.yml" 
           
           # 1. Tenta mover o arquivo. Se falhar, exibe o ERRO FATAL no log.
           if ! mv "$CONFIG_PATH" ./config.yml ; then
