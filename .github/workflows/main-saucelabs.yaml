@@ -1,6 +1,8 @@
 name: WebdriverIO via Sauce Labs
-
-on: pull_request
+on: 
+ push:
+    branches:
+      - main
 
 jobs: 
   wdio-sauce-tests:
