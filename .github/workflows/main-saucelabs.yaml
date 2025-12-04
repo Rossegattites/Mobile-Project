@@ -30,23 +30,13 @@ jobs:
         env:
           SAUCE_USERNAME: oauth-rossegattites-15-15db7
           SAUCE_ACCESS_KEY: e14e9f20-b9fc-47b8-9f2c-d100d1aeb73f
-          
-      # PASSO CRÍTICO FINAL: Debug e Cópia Forçada
-      - name: Prepare config.yml
+      - name: Debug config.yml
         run: |
-          # CORREÇÃO: Tenta o caminho com o ponto inicial.
-          CONFIG_PATH="./.sauce/config.yml" 
-          
-          # 1. Tenta mover o arquivo. Se falhar, exibe o ERRO FATAL no log.
-          if ! mv "$CONFIG_PATH" ./config.yml ; then
-             echo "::error::ERRO FATAL: Falha ao mover o arquivo. O caminho de origem $CONFIG_PATH está INCORRETO. Verifique a estrutura de pastas!"
-             exit 1
-          fi
-          
-          # 2. DEBUG: Exibe o conteúdo do arquivo
-          echo "Conteúdo FINAL do config.yml na raiz do Runner:"
-          cat ./config.yml
-          
+          echo "Arquivos na raiz:"
+          ls -R .
+          echo "Exibindo .sauce/config.yml:"
+          cat ./.sauce/config.yml
+
       - name: Run tests with saucectl
         uses: saucelabs/saucectl-run-action@v4
         with:
