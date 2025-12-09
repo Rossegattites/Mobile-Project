@@ -18,7 +18,7 @@ artifacts:
 
 suites:
   - name: "WDIO Android Native App Test"
-    framework: webdriverio 
+    framework: WebdriverIO 
     
     platformName: Android
     automationName: UiAutomator2
