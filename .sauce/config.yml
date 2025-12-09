@@ -1,6 +1,6 @@
 # Configuração para rodar testes WDIO Appium no Sauce Labs
 apiVersion: v1alpha
-kind: saucectl
+kind: saucectl-config
 
 metadata:
   name: AndroidNativeAppTest
