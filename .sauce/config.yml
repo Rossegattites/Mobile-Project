@@ -3,7 +3,7 @@ apiVersion: v1alpha
 kind: saucectl
 
 metadata:
-  name: AndroidNativeAppTest-TEMP-FIX
+  name: AndroidNativeAppTest
 
 sauce:
   region: eu-central-1
