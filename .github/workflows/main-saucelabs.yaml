@@ -37,7 +37,7 @@ jobs:
           echo "Arquivos na raiz:"
           ls -R .
           echo "Exibindo .sauce/config.yml:"
-          cat ./.sauce/config.yml
+          cat .sauce/config.yml
 
       - name: Run tests with saucectl
         uses: saucelabs/saucectl-run-action@v4
