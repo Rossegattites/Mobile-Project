@@ -1,6 +1,6 @@
 # Configuração para rodar testes WDIO Appium no Sauce Labs
 apiVersion: v1alpha
-kind: appium
+kind: webdriverio
 
 metadata:
   name: AndroidNativeAppTest
@@ -10,8 +10,7 @@ sauce:
   #username: oauth-rossegattites-15-15db7
   #accessKey: e14e9f20-b9fc-47b8-9f2c-d100d1aeb73f
 
-appium:
-  version: "1.22.3"
+
 
 rootDir: . 
 
