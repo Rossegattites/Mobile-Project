@@ -1,6 +1,6 @@
 # Configuração para rodar testes WDIO Appium no Sauce Labs
 apiVersion: v1alpha
-kind: webdriverio
+#kind: webdriverio
 
 metadata:
   name: AndroidNativeAppTest
