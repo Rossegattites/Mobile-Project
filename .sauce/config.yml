@@ -10,8 +10,6 @@ sauce:
   #username: oauth-rossegattites-15-15db7
   #accessKey: e14e9f20-b9fc-47b8-9f2c-d100d1aeb73f
 
-
-
 rootDir: . 
 
 artifacts:
