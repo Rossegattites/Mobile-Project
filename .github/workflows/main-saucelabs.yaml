@@ -43,7 +43,7 @@ jobs:
         uses: saucelabs/saucectl-run-action@v4
         with:
           pass-threshold: 1
-          config-file: ./.sauce/config.yml
+          config-file: .sauce/config.yml
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
