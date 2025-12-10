@@ -1,6 +1,6 @@
 # Configuração para rodar testes WDIO Appium no Sauce Labs
 apiVersion: v1alpha
-kind: webdriver
+kind: appium
 
 metadata:
   name: AndroidNativeAppTest
@@ -18,7 +18,7 @@ artifacts:
 
 suites:
   - name: "WDIO Android Native App Test"
-    framework: webdriverio 
+    framework: webdriverio
     
     platformName: Android
     automationName: UiAutomator2
